@@ -34,10 +34,39 @@ jobs:
               run: npm install
 
             - name: unit test
+              id: nodejs-unit-testing-steps 
               run: npm test
 
             - name: upload report to rtf
+              if: steps.nodejs-unit-testing-steps.outcome == 'failure' || steps.nodejs-unit-testing-steps.outcome == 'sucess'
               uses: actions/upload-artifact@v3
               with:
                 name: report-test.txt
                 path: test-results.xml
+
+    code_caverage:
+                  name: unit testing
+                  runs-on: ubuntu-latest
+                  needs: unit-testing
+                  steps:
+                      - name: checkout
+                        uses: actions/checkout@v4
+                        
+                      - name: setup node js version 18
+                        uses: actions/setup-node@v3
+                        with:
+                          node-version: 18
+          
+                      - name: install depend.
+                        run: npm install
+          
+                      - name:  check code coverage
+                        continue-on-error: true
+                        run: npm run coverage
+          
+                      - name: upload report coverage to rtf 
+                        uses: actions/upload-artifact@v3
+                        with:
+                          name: report-coverage.txt
+                          path: coverage
+                          retention-days: 5      
