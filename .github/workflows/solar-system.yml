@@ -107,3 +107,9 @@ jobs:
                     #docker inspect solar-system-app |grep -i IPAddress
                     echo Testing Image URL using wget
                     wget -q -O - 127.0.0.1:3000/live | grep live                       
+            - name: build and push 
+              uses: docker/build-push-action@v5
+              with:
+                      context: .
+                      push: true
+                      tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}        
