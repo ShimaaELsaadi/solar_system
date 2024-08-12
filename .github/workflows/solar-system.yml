@@ -33,4 +33,4 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: report
-                path: mocha-junit-reporter
+                path: app-test.js
