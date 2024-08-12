@@ -38,7 +38,7 @@ jobs:
               run: npm test
 
             - name: upload report to rtf
-              if: steps.nodejs-unit-testing-steps.outcome == 'failure' || steps.nodejs-unit-testing-steps.outcome == 'success'
+              if: failure() && steps.nodejs-unit-testing-steps.outcome == 'failure' || steps.nodejs-unit-testing-steps.outcome == 'success'
               uses: actions/upload-artifact@v3
               with:
                 name: report-test.txt
