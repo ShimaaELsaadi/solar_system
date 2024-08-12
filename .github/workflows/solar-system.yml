@@ -28,3 +28,9 @@ jobs:
 
             - name: unit test
               run: npm test
+
+            - name: upload report to rtf
+              uses: actions/upload-artifact@v3
+              with:
+                name: report
+                path: mocha-junit-reporter
