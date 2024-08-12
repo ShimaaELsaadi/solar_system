@@ -32,5 +32,5 @@ jobs:
             - name: upload report to rtf
               uses: actions/upload-artifact@v3
               with:
-                name: report
-                path: app-test.js
+                name: report-test.txt
+                path: test-result.xml
