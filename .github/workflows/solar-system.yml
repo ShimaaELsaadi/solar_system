@@ -10,7 +10,7 @@ env:
       MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
       MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
       REGISTRY_git: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
+      IMAGE_NAME: solar_system
 
       
 jobs:
@@ -130,12 +130,6 @@ jobs:
               with:
                       context: .
                       push: true
-                      tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}  
-
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v5
-              with:
-                  push: true
-                  tags: |
-                          ${{ env.REGISTRY_git }}/${{ env.IMAGE_NAME }}:latest
-                          ${{ env.REGISTRY_git }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+                      tags: |
+                        ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }} 
+                        ${{ env.REGISTRY_git }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ github.sha }} 
