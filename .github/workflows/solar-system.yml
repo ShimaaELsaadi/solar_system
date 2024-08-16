@@ -132,4 +132,4 @@ jobs:
                       push: true
                       tags: |
                         ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }} 
-                        ${{ env.REGISTRY_git }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ github.sha }} 
+                        ${{ env.REGISTRY_git }}/shimaaelsaadi/${{ env.IMAGE_NAME }}:${{ github.sha }} 
