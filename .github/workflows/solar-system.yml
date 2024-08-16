@@ -85,7 +85,7 @@ jobs:
         contents: read
         attestations: write
         id-token: write
-        
+
       steps:
             - name: checkout
               uses: actions/checkout@v4
@@ -137,5 +137,5 @@ jobs:
               with:
                   push: true
                   tags: |
-                          ${{ env.REGISTRY_git }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:latest
-                          ${{ env.REGISTRY_git }}/${{ github.repository }}/ ${{ env.IMAGE_NAME }}:${{ github.sha }}
+                          ${{ env.REGISTRY_git }}/${{ env.IMAGE_NAME }}:latest
+                          ${{ env.REGISTRY_git }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
