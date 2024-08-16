@@ -9,6 +9,9 @@ env:
       MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
       MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
       MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      REGISTRY_git: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
       
 jobs:
     unit-testing:
@@ -72,10 +75,15 @@ jobs:
                           path: coverage
                           retention-days: 5 
       
-    docker: 
+    Publish_Docker_image: 
       name: containerization
       needs: [code_caverage]   
       runs-on: ubuntu-latest
+      permissions:
+        packages: write
+        contents: read
+        attestations: write
+        id-token: write
       steps:
             - name: checkout
               uses: actions/checkout@v4
@@ -85,6 +93,14 @@ jobs:
               with:
                 username: ${{ vars.DOCKER_USER }}
                 password: ${{ secrets.DOCKER_PASS }}  
+
+            - name:  Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry:  ${{ env.REGISTRY_git }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN  }}  
+    
 
             - name: build and push 
               uses: docker/build-push-action@v5
@@ -107,9 +123,17 @@ jobs:
                     #docker inspect solar-system-app |grep -i IPAddress
                     echo Testing Image URL using wget
                     wget -q -O - 127.0.0.1:3000/live | grep live                       
-            - name: build and push 
+            - name: build and push to docker hub
               uses: docker/build-push-action@v5
               with:
                       context: .
                       push: true
-                      tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}        
+                      tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}  
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  push: true
+                  tags: |
+                          ${{ env.REGISTRY_git }}/${{ github.repository }}/${{ IMAGE_NAME }}:latest
+                          ${{ env.REGISTRY_git }}/${{ github.repository }}/ ${{ IMAGE_NAME }}:${{ github.sha }}
