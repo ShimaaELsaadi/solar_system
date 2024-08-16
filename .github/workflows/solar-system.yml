@@ -135,5 +135,5 @@ jobs:
               with:
                   push: true
                   tags: |
-                          ${{ env.REGISTRY_git }}/${{ github.repository }}/${{ IMAGE_NAME }}:latest
-                          ${{ env.REGISTRY_git }}/${{ github.repository }}/ ${{ IMAGE_NAME }}:${{ github.sha }}
+                          ${{ env.REGISTRY_git }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:latest
+                          ${{ env.REGISTRY_git }}/${{ github.repository }}/ ${{ env.IMAGE_NAME }}:${{ github.sha }}
