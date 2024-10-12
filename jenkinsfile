@@ -86,10 +86,11 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${DOCKER_HUB_CREDENTIALS}") {
-                        dockerImage.push("${DOCKER_IMAGE_TAG}")
-                    }
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
+                 def app = docker.image("$DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG")
+                 app.push()
             }
         }
         stage('Test Docker Container') {
