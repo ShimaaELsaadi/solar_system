@@ -96,14 +96,16 @@ pipeline {
         }
         stage('Test Docker Container') {
             steps {
-                script {
-                    dockerImage.run('-d -p 3000:3000')
-                    sh 'curl http://localhost:3000'  
-                }
-            }
+        script {
+            def dockerImage = docker.build("$DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG")
+            dockerImage.run('-d -p 3000:3000')
+            sh 'sleep 5' 
+            sh 'curl http://localhost:3000'
         }
-
-    }     
+    }
+}
+}
+           
     post{
 
             failure {
