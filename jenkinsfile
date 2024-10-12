@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_REPO = 'shaimaamelsaadi/solar_system'
+        DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'
+        EMAIL_RECIPIENTS = 'shimaaelsaadi@gmail.com' 
+       // AWS_CREDENTIALS = credentials('aws-credentials-id')
+        // SSH_KEY = credentials('ssh-key-id')
+        //DB_CREDENTIALS = credentials('db-credentials-id')
+    }
+
+    stages {
+        stage('Cleanup') {
+            steps {
+                deleteDir()
+            }
+        }
+        stage('Prepare Jenkins Inputs') {
+            steps {
+                echo 'Preparing Jenkins inputs...'
+
+            }
+        }
+        stage('Checkout Code') {
+            steps {
+                git branch: 'feature/exploring-workflow', url: 'https://github.com/ShimaaELsaadi/solar_system'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                
+                sh 'npm test'
+                
+            }
+        }
+        stage('Run Code Coverage') {
+            steps {
+                
+                sh 'npm run coverage'
+                publishHTML target: [
+                     reportName: 'Coverage Report',
+                     reportDir: 'coverage',
+                     reportFiles: 'index.html',
+                     alwaysLinkToLastBuild: true
+                ]
+            }
+        }
+
+        stage('Is Passed?') {
+            steps {
+                 script {
+                    if (currentBuild.result == 'FAILURE' || currentBuild.result == null) { // 'null' means the result isn't set yet
+                      emailext to: "${EMAIL_RECIPIENTS}",
+                         subject: "Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                         body: """
+                         The build has failed.
+
+                         Job: ${env.JOB_NAME}
+                         Build Number: ${env.BUILD_NUMBER}
+                         Build URL: ${env.BUILD_URL}
+
+                         Please check Jenkins for more details.
+                         """
+                error("Tests failed, stopping the pipeline")
+            }
+        }
+    }
+}
+
+    }
+}
