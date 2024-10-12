@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
 
-mongoose.connect('mongodb+srv://superuser:SuperPassword@supercluster.d83jj.mongodb.net/superData?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://supercluster.d83jj.mongodb.net/superData', {
     user: 'superuser',
     pass: 'SuperPassword',
     useNewUrlParser: true,
