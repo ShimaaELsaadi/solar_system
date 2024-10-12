@@ -61,7 +61,7 @@ pipeline {
                     cd $WORKSPACE
                     
                     # Check if the Docker image exists
-                    IMAGE_EXISTS=$(sudo docker images -q $DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG)
+                    IMAGE_EXISTS=$(docker images -q $DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG)
                     
                     if [ -n "$IMAGE_EXISTS" ]; then
                         echo "Docker image exists. Deleting existing image..."
